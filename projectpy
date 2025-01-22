@@ -1,0 +1,30 @@
+import pandas as pd
+
+# Load the Excel file and the required sheet
+file_path = 'dataset.xlsx'
+data = pd.read_excel(file_path, sheet_name='Sheet1')
+
+# Select numeric columns
+numeric_data = data.select_dtypes(include=['float64', 'int64'])
+
+# Initialize a dictionary to store EDA results
+eda_results = {}
+
+# Calculate EDA metrics for each numeric column
+for column in numeric_data.columns:
+    eda_results[column] = {
+        'Mean': numeric_data[column].mean(),
+        'Median': numeric_data[column].median(),
+        'Mode': numeric_data[column].mode().iloc[0] if not numeric_data[column].mode().empty else None,
+        'Variance': numeric_data[column].var(),
+        'Standard Deviation': numeric_data[column].std(),
+        'Range': numeric_data[column].max() - numeric_data[column].min(),
+        'Skewness': numeric_data[column].skew(),
+        'Kurtosis': numeric_data[column].kurt()
+    }
+
+# Convert the results to a DataFrame
+eda_results_df = pd.DataFrame(eda_results).T
+
+# Display the EDA results
+print(eda_results_df)
